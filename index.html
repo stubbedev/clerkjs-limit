@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+    <link rel="stylesheet" href="assets/resets.css">
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="assets/main.js">
+    </script>
+    <title>Clerk.js Test File</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="search-form">
+            <input type="search" name="q" id="searchbox">
+        </div>
+    </div>
+    <div class="canvas">
+        <span id="clerk-others-also-bought">
+        </span>
+
+        <script
+            type="text/x-clerk-template"
+            class="clerk"
+            data-api="search/predictive"
+            data-instant-search="#searchbox"
+            data-target="#clerk_m"
+            data-limit="5"
+            id="clerk-content-3">
+            <div class="row">
+                    <div class="col-xs-12 col-md-4 space-sm" style="float:right">
+                        <div class="clerk-live-search-right">
+                            {% if categories.length + products.length > 0 %}
+                                <div class="clerk-livesearch-title">Categorie</div>
+                                <div class="clerk-livesearch-categories"></div>
+                            {% endif %}
+
+                            {% if suggestions.length > 0 %}
+                                <div class="clerk-livesearch-title">Suggerimenti</div>
+                                <div class="clerk-livesearch-suggestions">
+                                    {% for suggestion in suggestions %}
+                                        {% if suggestion != query %}
+                                            <a href="https://www.icintracom.biz/catalogsearch/result/?q={{ suggestion }}">{{ suggestion }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            {% if pages.length > 0 %}
+                                <div class="clerk-livesearch-title">Altri contenuti correlati</div>
+                                <div class="clerk-livesearch-pages">
+                                    {% for page in pages %}
+                                        <a href="{{ page.url }}">{{ page.title }}</a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                        <div class="col-xs-12 col-md-8 space-sm">
+                    <div class="clerk-live-search-left">
+                        <div class="clerk-livesearch-title">Prodotti</div>
+                        <div style="padding: 10px">
+                            {% for product in products %}
+                                <div class="clerk-live-product" data-prod="{{ product.id }}">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <a href="{{ product.url }}">
+                                                <div class="media">
+                                                    <div class="media-body" style="width: auto;">
+                                                        <img src="{{ product.image }}" alt="{{ product.name }}" />
+                                                    </div>
+                                                    <div class="media-right" style="padding-left: 1.5rem;">
+                                                        <div class="clerk-live-product-name"
+                                                            data-parent-category-url="{{ product.parent_category_url }}"
+                                                            data-parent-category-name="{{ product.parent_category_name }}">
+                                                            {{ product.name }}
+                                                        </div>
+                                                        <small><strong>Cod:</strong> {{ product.sku }}</small>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script
+            type="text/x-clerk-template"
+            id="clerk-category-popular-template"
+            class="clerk"
+            data-target="#clerk-others-also-bought"
+            data-api="recommendations/category/popular"
+            data-limit="1"
+            data-category="4133">
+            {% for product in products %}
+                <div class="item" data-prod="{{ product.id }}">
+                <div class="item-inner">
+                <div class="btn-quickview-container">
+                <a role="button" class="btn btn-quickview btn-quickview-topright"
+                data-href="{{ product.id }}"
+                data-return-url="https://www.icintracom.biz/cavi/cavi-di-rete/cavi-patch-categoria-6.html"
+                title="{{ product.name | html_escape }}"
+                >
+                <div class="btn-quickview-text">
+                    Guarda                </div>
+                <div class="btn-quickview-img">
+                    <img class="cart-special-img" src="https://d36bf1lf4dpirq.cloudfront.net/skin/frontend/intracom/default/icons/complex-quickview.svg"/>
+                </div>
+                </a>
+                <a class="item-link" href="{{ product.url }}" title="{{ product.name | html_escape }}">
+
+                <div class="labels-product-container">
+                <div class="labels-product">
+                {% if product.badge_label %}
+                <span class="label label-{{ product.badge_code }}">{{ product.badge_label }}</span>
+                {% endif %}
+                {% if product.classe_prodotto == "A" %}
+                <span class="label label-bestseller">Best Seller</span>
+                {% endif %}
+                    <span class="label label-info deal-save-pct"></span>
+                </div>
+                </div>
+
+                <div class="product-image">
+                    <div class="xt-media-container">
+                        <img class="xt-media" src="{{ product.image }}" loading="lazy" alt="{{ product.name | html_escape }}">
+                    </div>
+                </div>
+                <h2 class="product-name">{{ product.name }}</h2>
+                </a>
+                </div>
+
+                {% if product.manufacturer %}
+                <div class="product-meta"><span><a href="{{ product.manufacturer_url }}">{{ product.manufacturer }}</a></span></div>
+                {% endif %}
+
+                <div class="product-meta product-meta-code"><span>Cod:</span> {{ product.sku }}</div>
+                </div>
+
+                <div class="item-add">
+                </div>
+
+
+                <div class="item-add item-add-additional">
+                <div class="toolbar-compare">
+                                </div>
+                </div>
+                </div>
+            {% endfor %}
+        </script>
+
+        <span id="clerk_m">
+        </span>
+
+    </div>
+    <script>
+        const STORE_KEY = 'eBVN5dsNfIipdohbqHihGi3Ot5bKNHGl';
+        init(STORE_KEY);
+    </script>
+</body>
+
+</html>
